@@ -200,13 +200,17 @@
     <div class="dimensions-group">
       <label>Canvas Width:</label>
       <div class="dimension-group form-group">
-        <input class="form-input" type="number" id="canvasWidthFt" value="6" step="1"> ft
-        <input class="form-input" type="number" id="canvasWidthIn" value="0" step="1"> in
+        <input class="form-input" type="number" id="canvasWidthFt" value="6" step="1" pattern="[0-9]*"
+          inputmode="numeric"> ft
+        <input class="form-input" type="number" id="canvasWidthIn" value="0" step="1" pattern="[0-9]*"
+          inputmode="numeric"> in
       </div>
       <label>Canvas Height:</label>
       <div class="dimension-group form-group">
-        <input class="form-input" type="number" id="canvasHeightFt" value="3" step="1"> ft
-        <input class="form-input" type="number" id="canvasHeightIn" value="0" step="1"> in
+        <input class="form-input" type="number" id="canvasHeightFt" value="3" step="1" pattern="[0-9]*"
+          inputmode="numeric"> ft
+        <input class="form-input" type="number" id="canvasHeightIn" value="0" step="1" pattern="[0-9]*"
+          inputmode="numeric"> in
       </div>
     </div>
     <div class="options-group">
@@ -521,7 +525,10 @@
 
     [canvasWidthFt, canvasWidthIn, canvasHeightFt, canvasHeightIn,
       stencilSizeSelect, showGridCheckbox, gridSubdivisionSelect]
-      .forEach(el => el.addEventListener('input', drawGrid));
+      .forEach(el => {
+        el.addEventListener('input', drawGrid);
+        el.addEventListener('change', drawGrid);
+      });
 
     window.addEventListener('load', drawGrid);
 
