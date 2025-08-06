@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Stencil Layout</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+
+    label,
+    input,
+    select,
+    button {
+      margin: 5px 0;
+      display: block;
+    }
+
+    .canvas-size-container {
+      display: flex;
+      gap: 40px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .preset-group,
+    .dimensions-group,
+    .options-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dimension-group,
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .option-item>label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+    }
+
+    #rowInputs {
+      margin-top: 10px;
+    }
+
+    #rowInputs input {
+      margin-bottom: 5px;
+      width: 100%;
+    }
+
+    #canvasContainer {
+      margin: 40px auto;
+      border: 1px solid #ccc;
+      width: fit-content;
+      height: fit-content;
+    }
+
+    canvas {
+      background-color: #fdfdfd;
+      display: block;
+    }
+
+    /* Modal styles */
+    #modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #modal img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    #modal div {
+      position: relative;
+      max-width: 90%;
+      max-height: 90%;
+    }
+
+    #modalCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    #dropClothOverlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 3;
+      display: none;
+      pointer-events: none;
+    }
+
+    #closeModal {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 10000;
+      background: #fff;
+      border: none;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Stencil Layout Helper</h2>
+
+  <div class="canvas-size-container">
+    <div class="preset-group">
+      <label for="presetSize">Preset Canvas Size:</label>
+      <select id="presetSize">
+        <option value="custom">— Custom —</option>
+        <option value="4x12">4 × 12 ft — $8.99</option>
+        <option value="4x15">4 × 15 ft — $10.99</option>
+        <option value="6x9">6 × 9 ft — $6.99</option>
+        <option value="9x12">9 × 12 ft — $14.99</option>
+        <option value="12x15">12 × 15 ft — $29.99</option>
+      </select>
+    </div>
+    <div class="dimensions-group">
+      <label>Canvas Width:</label>
+      <div class="dimension-group">
+        <input type="number" id="canvasWidthFt" value="6" step="1"> ft
+        <input type="number" id="canvasWidthIn" value="0" step="1"> in
+      </div>
+      <label>Canvas Height:</label>
+      <div class="dimension-group">
+        <input type="number" id="canvasHeightFt" value="3" step="1"> ft
+        <input type="number" id="canvasHeightIn" value="0" step="1"> in
+      </div>
+    </div>
+    <div class="options-group">
+      <div class="option-item">
+        <label for="stencilSize">Stencil Size:</label>
+        <select id="stencilSize">
+          <option value="6">6 inch</option>
+          <option value="8">8 inch</option>
+          <option value="12" selected>12 inch</option>
+          <option value="16">16 inch</option>
+        </select>
+      </div>
+      <div class="option-item">
+        <label for="showGrid">
+          <input type="checkbox" id="showGrid" checked> Show margin grid
+        </label>
+      </div>
+      <div class="option-item">
+        <label for="gridSubdivision">Grid Subdivision:</label>
+        <select id="gridSubdivision">
+          <option value="1">1× cell</option>
+          <option value="0.5" selected>½× cell</option>
+          <option value="0.25">¼× cell</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div id="rowInputs"></div>
+
+  <div id="canvasContainer">
+    <canvas id="stencilCanvas"></canvas>
+  </div>
+
+  <button id="previewButton">Preview on Overpass</button>
+
+  <!-- Hidden preload image -->
+  <img id="bgImagePreload" src="hf73celn9ehf1.jpeg" style="display: none;" />
+  <img id="canvasTexture" src="seamless-canvas-fabric-texture-1145-4059680681.jpg" style="display: none;" />
+
+  <!-- Modal for preview -->
+  <div id="modal">
+    <div>
+      <img id="modalBg" src="hf73celn9ehf1.jpeg" alt="Freeway Overpass">
+      <div id="dropClothOverlay">
+        <canvas id="dropClothCanvas"></canvas>
+      </div>
+      <button id="closeModal">Close</button>
+    </div>
+  </div>
+
+  <p>
+    Cheap canvas options at
+    <a href="https://www.harborfreight.com/painting/painting-supplies/drop-cloths-sheeting/canvas-drop-cloths.html"
+      target="_blank">
+      Harbor Freight Canvas Drop Cloths
+    </a>.
+  </p>
+  <p>
+    Cheap spray paint options:
+    <a href="https://www.lowes.com/pd/Project-Source-10-OZ-PROJECT-SOURCE-FLAT-BLACK-ECONOMY-SPRAY-PAINT/5013990349"
+      target="_blank">
+      Lowes Project Source Flat Black
+    </a>,
+    <a href="https://www.homedepot.com/p/HDX-10-oz-All-Purpose-Flat-Black-Spray-Paint-AF79705UF/320161382"
+      target="_blank">
+      Home Depot HDX Flat Black
+    </a>.
+  </p>
+
+  <script>
+    const INCH_TO_PX = 10;
+    const RULER_MARGIN = 27;
+    const presets = {
+      "6x9": { w: 9, h: 6 },
+      "9x12": { w: 12, h: 9 },
+      "4x12": { w: 12, h: 4 },
+      "4x15": { w: 15, h: 4 },
+      "12x15": { w: 15, h: 12 }
+    };
+
+    const presetSize = document.getElementById('presetSize');
+    const canvasWidthFt = document.getElementById('canvasWidthFt');
+    const canvasWidthIn = document.getElementById('canvasWidthIn');
+    const canvasHeightFt = document.getElementById('canvasHeightFt');
+    const canvasHeightIn = document.getElementById('canvasHeightIn');
+    const stencilSizeSelect = document.getElementById('stencilSize');
+    const showGridCheckbox = document.getElementById('showGrid');
+    const gridSubdivisionSelect = document.getElementById('gridSubdivision');
+    const rowInputs = document.getElementById('rowInputs');
+    const canvas = document.getElementById('stencilCanvas');
+    const container = document.getElementById('canvasContainer');
+    const ctx = canvas.getContext('2d');
+
+    function getCanvasDimensionsInInches() {
+      const wf = parseFloat(canvasWidthFt.value) || 0;
+      const wi = parseFloat(canvasWidthIn.value) || 0;
+      const hf = parseFloat(canvasHeightFt.value) || 0;
+      const hi = parseFloat(canvasHeightIn.value) || 0;
+      return { width: wf * 12 + wi, height: hf * 12 + hi };
+    }
+
+    function updateCanvasSize() {
+      const { width, height } = getCanvasDimensionsInInches();
+      const pxW = width * INCH_TO_PX;
+      const pxH = height * INCH_TO_PX;
+      canvas.width = pxW + RULER_MARGIN;
+      canvas.height = pxH + RULER_MARGIN;
+      container.style.width = canvas.width + 'px';
+      container.style.height = canvas.height + 'px';
+    }
+
+    function createRowInput(index, maxChars) {
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.maxLength = maxChars;
+      input.placeholder = `Row ${index} (max ${maxChars} chars)`;
+      input.title = `Max ${maxChars} characters allowed`;
+      input.addEventListener('input', drawGrid);
+      return input;
+    }
+
+    function updateRows() {
+      const { width, height } = getCanvasDimensionsInInches();
+      const stencilSize = parseFloat(stencilSizeSelect.value);
+      const charsPerRow = Math.floor(width / stencilSize);
+      const maxRows = Math.floor(height / stencilSize);
+      const existing = Array.from(rowInputs.children);
+      const values = existing.map(i => i.value);
+
+      while (existing.length < maxRows) {
+        rowInputs.appendChild(createRowInput(existing.length + 1, charsPerRow));
+        existing.push(rowInputs.lastChild);
+      }
+      while (existing.length > maxRows) {
+        rowInputs.removeChild(existing.pop());
+      }
+      existing.forEach((input, i) => {
+        input.maxLength = charsPerRow;
+        input.placeholder = `Row ${i + 1} (max ${charsPerRow} chars)`;
+        input.value = (values[i] || '').slice(0, charsPerRow);
+      });
+    }
+
+    function drawMarginGrid() {
+      if (!showGridCheckbox.checked) return;
+      const subdivision = parseFloat(gridSubdivisionSelect.value);
+      const baseCell = parseFloat(stencilSizeSelect.value) * INCH_TO_PX;
+      const step = baseCell * subdivision;
+      ctx.strokeStyle = 'rgba(150,150,150,0.3)';
+      ctx.lineWidth = 1;
+      for (let x = RULER_MARGIN; x <= canvas.width; x += step) {
+        ctx.beginPath();
+        ctx.moveTo(x, RULER_MARGIN);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+      for (let y = RULER_MARGIN; y <= canvas.height; y += step) {
+        ctx.beginPath();
+        ctx.moveTo(RULER_MARGIN, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+    }
+
+    function drawRulers() {
+      const { width, height } = getCanvasDimensionsInInches();
+      const pxW = width * INCH_TO_PX;
+      const pxH = height * INCH_TO_PX;
+      const subdivision = parseFloat(gridSubdivisionSelect.value);
+      const baseCell = parseFloat(stencilSizeSelect.value) * INCH_TO_PX;
+      const step = baseCell * subdivision;
+      ctx.strokeStyle = '#000';
+      ctx.fillStyle = '#000';
+      ctx.lineWidth = 1;
+      ctx.font = '10px Arial';
+
+      ctx.beginPath();
+      ctx.moveTo(RULER_MARGIN, RULER_MARGIN);
+      ctx.lineTo(RULER_MARGIN + pxW, RULER_MARGIN);
+      ctx.stroke();
+
+      for (let x = 0; x <= pxW; x += step) {
+        const tick = subdivision === 1 ? 15 : 10;
+        ctx.beginPath();
+        ctx.moveTo(RULER_MARGIN + x, RULER_MARGIN);
+        ctx.lineTo(RULER_MARGIN + x, RULER_MARGIN - tick);
+        ctx.stroke();
+        const val = (x / INCH_TO_PX).toFixed(2).replace(/\.00$/, '');
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(`${val}\"`, RULER_MARGIN + x, RULER_MARGIN - tick - 2);
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(RULER_MARGIN, RULER_MARGIN);
+      ctx.lineTo(RULER_MARGIN, RULER_MARGIN + pxH);
+      ctx.stroke();
+
+      for (let y = 0; y <= pxH; y += step) {
+        const tick = subdivision === 1 ? 15 : 10;
+        ctx.beginPath();
+        ctx.moveTo(RULER_MARGIN, RULER_MARGIN + y);
+        ctx.lineTo(RULER_MARGIN - tick, RULER_MARGIN + y);
+        ctx.stroke();
+        const val = (y / INCH_TO_PX).toFixed(2).replace(/\.00$/, '');
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`${val}\"`, RULER_MARGIN - tick - 2, RULER_MARGIN + y);
+      }
+    }
+
+    function drawGrid() {
+      updateCanvasSize();
+      updateRows();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#f0f0f0';
+      ctx.fillRect(0, 0, canvas.width, RULER_MARGIN);
+      ctx.fillRect(0, 0, RULER_MARGIN, canvas.height);
+      drawMarginGrid();
+      drawRulers();
+
+      const { width, height } = getCanvasDimensionsInInches();
+      const pxW = width * INCH_TO_PX;
+      const pxH = height * INCH_TO_PX;
+      ctx.strokeStyle = '#999';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(RULER_MARGIN, RULER_MARGIN, pxW, pxH);
+
+      const rows = Array.from(rowInputs.children).map(i => i.value.toUpperCase());
+      const cellSize = parseFloat(stencilSizeSelect.value) * INCH_TO_PX;
+      const totalH = rows.length * cellSize;
+      const startY = (pxH - totalH) / 2 + RULER_MARGIN;
+      ctx.font = `${cellSize * 1}px Stardos Stencil, Arial, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#000';
+
+      rows.forEach((text, r) => {
+        const rowW = text.length * cellSize;
+        const startX = (pxW - rowW) / 2 + RULER_MARGIN;
+        for (let c = 0; c < text.length; c++) {
+          const x = startX + c * cellSize;
+          const y = startY + r * cellSize;
+          ctx.strokeStyle = '#000';
+          ctx.strokeRect(x, y, cellSize, cellSize);
+          ctx.fillText(text[c], x + cellSize / 2, y + cellSize / 2 + cellSize * 0.15);
+          //ctx.fillText(text[c], x + cellSize / 2, y + cellSize / 2);
+        }
+      });
+    }
+
+    presetSize.addEventListener('change', () => {
+      const sel = presetSize.value;
+      if (presets[sel]) {
+        canvasWidthFt.value = presets[sel].w;
+        canvasWidthIn.value = 0;
+        canvasHeightFt.value = presets[sel].h;
+        canvasHeightIn.value = 0;
+      }
+      drawGrid();
+    });
+
+    [canvasWidthFt, canvasWidthIn, canvasHeightFt, canvasHeightIn,
+      stencilSizeSelect, showGridCheckbox, gridSubdivisionSelect]
+      .forEach(el => el.addEventListener('input', drawGrid));
+
+    window.addEventListener('load', drawGrid);
+
+    // Modal logic
+    const previewButton = document.getElementById('previewButton');
+    const modal = document.getElementById('modal');
+    const modalBg = document.getElementById('modalBg');
+    const dropClothCanvas = document.getElementById('dropClothCanvas');
+    const dropClothOverlay = document.getElementById('dropClothOverlay');
+    const closeModal = document.getElementById('closeModal');
+
+    previewButton.addEventListener('click', () => {
+      drawGrid();
+      if (!modalBg.complete) {
+        modalBg.onload = showModalOverlay;
+      } else {
+        showModalOverlay();
+      }
+    });
+
+    function getCleanStencilCanvas() {
+      const cellSize = parseFloat(stencilSizeSelect.value) * INCH_TO_PX;
+
+      // Get full canvas size in inches
+      const { width: clothWidthIn, height: clothHeightIn } = getCanvasDimensionsInInches();
+      const pxW = clothWidthIn * INCH_TO_PX;
+      const pxH = clothHeightIn * INCH_TO_PX;
+
+      // Prepare rows
+      const rows = Array.from(rowInputs.children).map(i => i.value.toUpperCase());
+
+      // Create full-size canvas
+      const cleanCanvas = document.createElement('canvas');
+      cleanCanvas.width = pxW;
+      cleanCanvas.height = pxH;
+
+      const ctx = cleanCanvas.getContext('2d');
+      const textureImg = document.getElementById('canvasTexture');
+
+      if (textureImg.complete) {
+        const patternCanvas = document.createElement('canvas');
+        patternCanvas.width = pxW;
+        patternCanvas.height = pxH;
+        const pCtx = patternCanvas.getContext('2d');
+
+        // Use pattern fill on temporary canvas
+        const pattern = pCtx.createPattern(textureImg, 'repeat');
+        if (pattern) {
+          pCtx.fillStyle = pattern;
+          pCtx.fillRect(0, 0, pxW, pxH);
+        }
+
+        // Apply blur while drawing the pattern to the real canvas
+        ctx.filter = 'blur(0.8px)';
+        ctx.drawImage(patternCanvas, 0, 0);
+        ctx.filter = 'none'; // reset
+      } else {
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, pxW, pxH);
+      }
+
+      // Text settings
+      ctx.fillStyle = 'black';
+      ctx.strokeStyle = 'black';
+      ctx.font = `${cellSize * 1}px Stardos Stencil, Arial, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      // Center stencil block vertically
+      const totalH = rows.length * cellSize;
+      const startY = (pxH - totalH) / 2;
+
+      rows.forEach((text, r) => {
+        const rowW = text.length * cellSize;
+        const startX = (pxW - rowW) / 2;
+        const y = startY + r * cellSize;
+
+        for (let c = 0; c < text.length; c++) {
+          const x = startX + c * cellSize;
+          ctx.strokeRect(x, y, cellSize, cellSize); // optional box
+          ctx.fillText(text[c], x + cellSize / 2, y + cellSize / 2 + cellSize * 0.15);
+          //ctx.fillText(text[c], x + cellSize / 2, y + cellSize / 2);
+        }
+      });
+
+      return cleanCanvas;
+    }
+
+    function showModalOverlay() {
+      modal.style.display = 'flex';
+
+      requestAnimationFrame(() => {
+        const bgW = modalBg.clientWidth;
+        const bgH = modalBg.clientHeight;
+
+        // Get the drop cloth text canvas
+        const stencilCanvas = getCleanStencilCanvas();
+
+        // Calculate real-world scaling
+        const stencilWIn = stencilCanvas.width / INCH_TO_PX;
+        const stencilHIn = stencilCanvas.height / INCH_TO_PX;
+
+        const pixelsPerFoot = 24;
+        const stencilWpx = (stencilWIn / 12) * pixelsPerFoot;
+        const stencilHpx = (stencilHIn / 12) * pixelsPerFoot;
+
+        const centerX = (bgW - stencilWpx) / 2;
+        const topY = 480 - stencilHpx;
+
+        // Prepare overlay container
+        const dropClothOverlay = document.getElementById('dropClothOverlay');
+        const dropClothCanvas = document.getElementById('dropClothCanvas');
+
+        dropClothOverlay.style.display = 'block';
+        dropClothOverlay.style.left = `${centerX}px`;
+        dropClothOverlay.style.top = `${topY}px`;
+        dropClothOverlay.style.width = `${stencilWpx}px`;
+        dropClothOverlay.style.height = `${stencilHpx}px`;
+        dropClothOverlay.style.position = 'absolute';
+        dropClothOverlay.style.zIndex = '3';
+        dropClothOverlay.style.background = 'rgba(255,255,255,0.95)';
+        dropClothOverlay.style.boxShadow = '0 0 10px rgba(0,0,0,0.3)';
+        dropClothOverlay.style.pointerEvents = 'none';
+
+        // Set canvas size and scale
+        dropClothCanvas.width = stencilWpx;
+        dropClothCanvas.height = stencilHpx;
+        dropClothCanvas.style.width = `${stencilWpx}px`;
+        dropClothCanvas.style.height = `${stencilHpx}px`;
+
+        const dropCtx = dropClothCanvas.getContext('2d');
+        dropCtx.clearRect(0, 0, stencilWpx, stencilHpx);
+
+        // Draw your stencilCanvas into dropClothCanvas (scale to fit)
+        dropCtx.drawImage(
+          stencilCanvas,
+          0, 0, stencilCanvas.width, stencilCanvas.height,
+          0, 0, stencilWpx, stencilHpx
+        );
+      });
+    }
+
+    closeModal.addEventListener('click', () => {
+      modal.style.display = 'none';
+      document.getElementById('dropClothOverlay').style.display = 'none';
+    });
+  </script>
+
+</body>
+
+</html>
