@@ -3,8 +3,9 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil&display=swap" rel="stylesheet">
   <title>Stencil Layout</title>
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     body {
       font-family: sans-serif;
@@ -61,8 +62,22 @@
     #canvasContainer {
       margin: 40px auto;
       border: 1px solid #ccc;
-      width: fit-content;
-      height: fit-content;
+      max-width: 100%;
+      max-height: 90vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #canvasScaler {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: top left;
+    }
+
+    .scaled-canvas {
+      transform-origin: top left;
+      display: block;
     }
 
     canvas {
@@ -123,6 +138,47 @@
       padding: 8px 12px;
       cursor: pointer;
     }
+
+    .divider-vertical {
+      border-left: 1px solid #ccc;
+      height: auto;
+      margin: 0 1rem;
+    }
+
+    .section-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .section-column {
+      flex: 1;
+      min-width: 200px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .section-divider {
+      width: 1px;
+      background: #ccc;
+      height: auto;
+    }
+
+    .section-icon {
+      margin-bottom: 0.5rem;
+      color: #666;
+    }
+
+    .section-icon svg {
+      width: 32px;
+      height: 32px;
+    }
   </style>
 </head>
 
@@ -130,9 +186,9 @@
   <h2>Stencil Layout Helper</h2>
 
   <div class="canvas-size-container">
-    <div class="preset-group">
+    <div class="preset-group form-group">
       <label for="presetSize">Preset Canvas Size:</label>
-      <select id="presetSize">
+      <select class="form-select" id="presetSize">
         <option value="custom">— Custom —</option>
         <option value="4x12">4 × 12 ft — $8.99</option>
         <option value="4x15">4 × 15 ft — $10.99</option>
@@ -143,34 +199,35 @@
     </div>
     <div class="dimensions-group">
       <label>Canvas Width:</label>
-      <div class="dimension-group">
-        <input type="number" id="canvasWidthFt" value="6" step="1"> ft
-        <input type="number" id="canvasWidthIn" value="0" step="1"> in
+      <div class="dimension-group form-group">
+        <input class="form-input" type="number" id="canvasWidthFt" value="6" step="1"> ft
+        <input class="form-input" type="number" id="canvasWidthIn" value="0" step="1"> in
       </div>
       <label>Canvas Height:</label>
-      <div class="dimension-group">
-        <input type="number" id="canvasHeightFt" value="3" step="1"> ft
-        <input type="number" id="canvasHeightIn" value="0" step="1"> in
+      <div class="dimension-group form-group">
+        <input class="form-input" type="number" id="canvasHeightFt" value="3" step="1"> ft
+        <input class="form-input" type="number" id="canvasHeightIn" value="0" step="1"> in
       </div>
     </div>
     <div class="options-group">
-      <div class="option-item">
+      <div class="option-item form-group">
         <label for="stencilSize">Stencil Size:</label>
-        <select id="stencilSize">
+        <select class="form-select" id="stencilSize">
           <option value="6">6 inch</option>
           <option value="8">8 inch</option>
           <option value="12" selected>12 inch</option>
           <option value="16">16 inch</option>
         </select>
       </div>
-      <div class="option-item">
-        <label for="showGrid">
-          <input type="checkbox" id="showGrid" checked> Show margin grid
+      <div class="option-item form-group">
+        <label class="form-switch">
+          <input type="checkbox" id="showGrid" checked>
+          <i class="form-icon"></i> Show margin grid
         </label>
       </div>
-      <div class="option-item">
+      <div class="option-item form-group">
         <label for="gridSubdivision">Grid Subdivision:</label>
-        <select id="gridSubdivision">
+        <select class="form-select" id="gridSubdivision">
           <option value="1">1× cell</option>
           <option value="0.5" selected>½× cell</option>
           <option value="0.25">¼× cell</option>
@@ -179,13 +236,15 @@
     </div>
   </div>
 
-  <div id="rowInputs"></div>
+  <div id="rowInputs" class="form-group"></div>
 
   <div id="canvasContainer">
-    <canvas id="stencilCanvas"></canvas>
+    <div id="canvasScaler">
+      <canvas id="stencilCanvas"></canvas>
+    </div>
   </div>
 
-  <button id="previewButton">Preview on Overpass</button>
+  <button class="btn btn-primary" id="previewButton">Preview on Overpass</button>
 
   <!-- Hidden preload image -->
   <img id="bgImagePreload" src="hf73celn9ehf1.jpeg" style="display: none;" />
@@ -202,24 +261,49 @@
     </div>
   </div>
 
-  <p>
-    Cheap canvas options at
-    <a href="https://www.harborfreight.com/painting/painting-supplies/drop-cloths-sheeting/canvas-drop-cloths.html"
-      target="_blank">
-      Harbor Freight Canvas Drop Cloths
-    </a>.
-  </p>
-  <p>
-    Cheap spray paint options:
-    <a href="https://www.lowes.com/pd/Project-Source-10-OZ-PROJECT-SOURCE-FLAT-BLACK-ECONOMY-SPRAY-PAINT/5013990349"
-      target="_blank">
-      Lowes Project Source Flat Black
-    </a>,
-    <a href="https://www.homedepot.com/p/HDX-10-oz-All-Purpose-Flat-Black-Spray-Paint-AF79705UF/320161382"
-      target="_blank">
-      Home Depot HDX Flat Black
-    </a>.
-  </p>
+  <div class="section-row">
+    <div class="section-column">
+      <div class="section-icon">
+        <i data-lucide="scroll"></i>
+      </div>
+      <a class="btn btn-link btn-sm"
+        href="https://www.harborfreight.com/painting/painting-supplies/drop-cloths-sheeting/canvas-drop-cloths.html"
+        target="_blank">
+        Harbor Freight Canvas Drop Cloths
+      </a>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div class="section-column">
+      <div class="section-icon">
+        <i data-lucide="spray-can"></i>
+      </div>
+      <a class="btn btn-link btn-sm"
+        href="https://www.lowes.com/pd/Project-Source-10-OZ-PROJECT-SOURCE-FLAT-BLACK-ECONOMY-SPRAY-PAINT/5013990349"
+        target="_blank">
+        Lowes Project Source Flat Black
+      </a>
+      <a class="btn btn-link btn-sm"
+        href="https://www.homedepot.com/p/HDX-10-oz-All-Purpose-Flat-Black-Spray-Paint-AF79705UF/320161382"
+        target="_blank">
+        Home Depot HDX Flat Black
+      </a>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div class="section-column">
+      <div class="section-icon">
+        <i data-lucide="square-m"></i>
+      </div>
+      <a class="btn btn-link btn-sm"
+        href="https://www.ebay.com/sch/i.html?_nkw=12+inche+letter+stencils&_sacat=0&_from=R40&_trksid=p2332490.m570.l1313"
+        target="_blank">
+        12-inch Letter Stencils on eBay
+      </a>
+    </div>
+  </div>
 
   <script>
     const INCH_TO_PX = 10;
@@ -257,8 +341,8 @@
       const { width, height } = getCanvasDimensionsInInches();
       const pxW = width * INCH_TO_PX;
       const pxH = height * INCH_TO_PX;
-      canvas.width = pxW + RULER_MARGIN;
-      canvas.height = pxH + RULER_MARGIN;
+      canvas.width = pxW + RULER_MARGIN + 10;
+      canvas.height = pxH + RULER_MARGIN + 10;
       container.style.width = canvas.width + 'px';
       container.style.height = canvas.height + 'px';
     }
@@ -363,6 +447,26 @@
       }
     }
 
+    function scaleCanvasToFit() {
+      const canvas = document.getElementById('stencilCanvas');
+      const container = document.getElementById('canvasContainer');
+      const scaler = document.getElementById('canvasScaler');
+
+      const canvasWidth = canvas.width;
+      const canvasHeight = canvas.height;
+      const containerWidth = container.clientWidth;
+      const containerHeight = container.clientHeight;
+
+      const scaleX = containerWidth / canvasWidth;
+      const scaleY = containerHeight / canvasHeight;
+      const scale = Math.min(1, scaleX, scaleY); // Only downscale
+
+      const offsetX = (containerWidth - canvasWidth * scale) / 2;
+      const offsetY = (containerHeight - canvasHeight * scale) / 2;
+
+      scaler.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+    }
+
     function drawGrid() {
       updateCanvasSize();
       updateRows();
@@ -372,6 +476,7 @@
       ctx.fillRect(0, 0, RULER_MARGIN, canvas.height);
       drawMarginGrid();
       drawRulers();
+      scaleCanvasToFit();
 
       const { width, height } = getCanvasDimensionsInInches();
       const pxW = width * INCH_TO_PX;
@@ -384,7 +489,7 @@
       const cellSize = parseFloat(stencilSizeSelect.value) * INCH_TO_PX;
       const totalH = rows.length * cellSize;
       const startY = (pxH - totalH) / 2 + RULER_MARGIN;
-      ctx.font = `${cellSize * 1}px 'Stardos Stencil', Arial, sans-serif`;
+      ctx.font = `${cellSize * 1}px Stardos Stencil, Arial, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillStyle = '#000';
@@ -481,7 +586,7 @@
       // Text settings
       ctx.fillStyle = 'black';
       ctx.strokeStyle = 'black';
-      ctx.font = `${cellSize * 1}px 'Stardos Stencil', Arial, sans-serif`;
+      ctx.font = `${cellSize * 1}px Stardos Stencil, Arial, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
@@ -563,6 +668,7 @@
       modal.style.display = 'none';
       document.getElementById('dropClothOverlay').style.display = 'none';
     });
+    lucide.createIcons();
   </script>
 
 </body>
