@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
+  <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil&display=swap" rel="stylesheet">
   <title>Stencil Layout</title>
   <style>
     body {
@@ -383,7 +384,7 @@
       const cellSize = parseFloat(stencilSizeSelect.value) * INCH_TO_PX;
       const totalH = rows.length * cellSize;
       const startY = (pxH - totalH) / 2 + RULER_MARGIN;
-      ctx.font = `${cellSize * 1}px Stardos Stencil, Arial, sans-serif`;
+      ctx.font = `${cellSize * 1}px 'Stardos Stencil', Arial, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillStyle = '#000';
@@ -480,7 +481,7 @@
       // Text settings
       ctx.fillStyle = 'black';
       ctx.strokeStyle = 'black';
-      ctx.font = `${cellSize * 1}px Stardos Stencil, Arial, sans-serif`;
+      ctx.font = `${cellSize * 1}px 'Stardos Stencil', Arial, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
