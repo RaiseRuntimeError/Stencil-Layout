@@ -245,6 +245,13 @@
       width: 24px;
       height: 24px;
     }
+
+    .social-float-mobile .social-icon {
+      font-size: 1.4em;
+      width: 3rem;
+      height: 3rem;
+      line-height: 3rem;
+    }
   </style>
 </head>
 
@@ -482,12 +489,6 @@
       <i class="fa-solid fa-link"></i>
     </a>
 
-    <!-- Text Message -->
-    <a href="sms:?&body=Check%20out%20this%20Stencil%20Layout%20tool%20https%3A%2F%2Fraiseruntimeerror.github.io%2FStencil-Layout"
-      class="social-icon sms-share" aria-label="Text message">
-      <i class="fa-solid fa-comment-sms"></i>
-    </a>
-
     <!-- Facebook -->
     <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fraiseruntimeerror.github.io%2FStencil-Layout&quote=Use%20this%20tool%20to%20take%20over%20freeway%20overpasses!%20%23DemocracyWins%20%23TrumpstienFiles"
       target="_blank" class="social-icon" aria-label="Facebook">
@@ -566,9 +567,8 @@
       return /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
     }
 
-    const smsShare = document.querySelector('.sms-share');
-    if (!isMobileDevice() && smsShare) {
-      smsShare.style.display = 'none';
+    if (isMobileDevice()) {
+      document.querySelector('.social-float')?.classList.add('social-float-mobile');
     }
 
     stencilSlider.addEventListener('input', () => {
