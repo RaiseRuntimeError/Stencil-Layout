@@ -245,12 +245,6 @@
       width: 24px;
       height: 24px;
     }
-
-    @media (min-width: 769px) {
-      .sms-share {
-        display: none !important;
-      }
-    }
   </style>
 </head>
 
@@ -567,6 +561,15 @@
           console.error('Failed to copy: ', err);
         });
     });
+
+    function isMobileDevice() {
+      return /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
+    }
+
+    const smsShare = document.querySelector('.sms-share');
+    if (!isMobileDevice() && smsShare) {
+      smsShare.style.display = 'none';
+    }
 
     stencilSlider.addEventListener('input', () => {
       stencilSizeInput.value = stencilSlider.value;
