@@ -5,6 +5,11 @@
   <meta charset="UTF-8" />
   <title>Stencil Layout</title>
   <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+  <link rel="preload" as="image" href="freeway-overpass.webp" />
+  <link rel="preload" as="image" href="seamless-canvas-fabric-texture.webp" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     body {
@@ -75,11 +80,6 @@
       transform-origin: top left;
     }
 
-    .scaled-canvas {
-      transform-origin: top left;
-      display: block;
-    }
-
     canvas {
       background-color: #fdfdfd;
       display: block;
@@ -139,12 +139,6 @@
       cursor: pointer;
     }
 
-    .divider-vertical {
-      border-left: 1px solid #ccc;
-      height: auto;
-      margin: 0 1rem;
-    }
-
     .section-row {
       display: flex;
       justify-content: space-between;
@@ -190,6 +184,7 @@
       <label for="presetSize">Preset Canvas Size:</label>
       <select class="form-select" id="presetSize">
         <option value="custom">— Custom —</option>
+        <option value="twin">3′3″ × 6′3″ — Twin Sheet</option>
         <option value="4x12">4 × 12 ft — $8.99</option>
         <option value="4x15">4 × 15 ft — $10.99</option>
         <option value="6x9">6 × 9 ft — $6.99</option>
@@ -214,14 +209,10 @@
       </div>
     </div>
     <div class="options-group">
-      <div class="option-item form-group">
+      <div class="form-group option-item">
         <label for="stencilSize">Stencil Size:</label>
-        <select class="form-select" id="stencilSize">
-          <option value="6">6 inch</option>
-          <option value="8">8 inch</option>
-          <option value="12" selected>12 inch</option>
-          <option value="16">16 inch</option>
-        </select>
+        <input type="range" id="stencilSlider" min="4" max="24" step="0.5" value="12" style="width: 150px;">
+        <input class="form-input" type="number" id="stencilSize" value="12" step="0.5" min="1" style="width: 70px;"> in
       </div>
       <div class="option-item form-group">
         <label class="form-switch">
@@ -251,13 +242,14 @@
   <button class="btn btn-primary" id="previewButton">Preview on Overpass</button>
 
   <!-- Hidden preload image -->
-  <img id="bgImagePreload" src="hf73celn9ehf1.jpeg" style="display: none;" />
-  <img id="canvasTexture" src="seamless-canvas-fabric-texture-1145-4059680681.jpg" style="display: none;" />
+  <img id="bgImagePreload" src="freeway-overpass.webp" style="display: none;" loading="eager" />
+  <img id="canvasTexture" src="seamless-canvas-fabric-texture.webp" style="display: none;" loading="eager" />
 
   <!-- Modal for preview -->
   <div id="modal">
     <div>
-      <img id="modalBg" src="hf73celn9ehf1.jpeg" alt="Freeway Overpass">
+      <img id="modalBg" src="freeway-overpass.webp" alt="Freeway Overpass"
+        style="background-color: #c1c1c1; width: 100%; height: auto;" loading="eager">
       <div id="dropClothOverlay">
         <canvas id="dropClothCanvas"></canvas>
       </div>
@@ -313,6 +305,7 @@
     const INCH_TO_PX = 10;
     const RULER_MARGIN = 27;
     const presets = {
+      "twin": { w: 6.25, h: 3.25 },
       "6x9": { w: 9, h: 6 },
       "9x12": { w: 12, h: 9 },
       "4x12": { w: 12, h: 4 },
@@ -325,13 +318,27 @@
     const canvasWidthIn = document.getElementById('canvasWidthIn');
     const canvasHeightFt = document.getElementById('canvasHeightFt');
     const canvasHeightIn = document.getElementById('canvasHeightIn');
-    const stencilSizeSelect = document.getElementById('stencilSize');
+    const stencilSlider = document.getElementById('stencilSlider');
+    const stencilSizeInput = document.getElementById('stencilSize');
     const showGridCheckbox = document.getElementById('showGrid');
     const gridSubdivisionSelect = document.getElementById('gridSubdivision');
     const rowInputs = document.getElementById('rowInputs');
     const canvas = document.getElementById('stencilCanvas');
     const container = document.getElementById('canvasContainer');
     const ctx = canvas.getContext('2d');
+
+    stencilSlider.addEventListener('input', () => {
+      stencilSizeInput.value = stencilSlider.value;
+      drawGrid();
+    });
+
+    stencilSizeInput.addEventListener('input', () => {
+      const val = parseFloat(stencilSizeInput.value);
+      if (!isNaN(val)) {
+        stencilSlider.value = val;
+        drawGrid();
+      }
+    });
 
     function getCanvasDimensionsInInches() {
       const wf = parseFloat(canvasWidthFt.value) || 0;
@@ -363,7 +370,7 @@
 
     function updateRows() {
       const { width, height } = getCanvasDimensionsInInches();
-      const stencilSize = parseFloat(stencilSizeSelect.value);
+      const stencilSize = parseFloat(stencilSizeInput.value);
       const charsPerRow = Math.floor(width / stencilSize);
       const maxRows = Math.floor(height / stencilSize);
       const existing = Array.from(rowInputs.children);
@@ -386,7 +393,7 @@
     function drawMarginGrid() {
       if (!showGridCheckbox.checked) return;
       const subdivision = parseFloat(gridSubdivisionSelect.value);
-      const baseCell = parseFloat(stencilSizeSelect.value) * INCH_TO_PX;
+      const baseCell = parseFloat(stencilSizeInput.value) * INCH_TO_PX;
       const step = baseCell * subdivision;
       ctx.strokeStyle = 'rgba(150,150,150,0.3)';
       ctx.lineWidth = 1;
@@ -409,7 +416,7 @@
       const pxW = width * INCH_TO_PX;
       const pxH = height * INCH_TO_PX;
       const subdivision = parseFloat(gridSubdivisionSelect.value);
-      const baseCell = parseFloat(stencilSizeSelect.value) * INCH_TO_PX;
+      const baseCell = parseFloat(stencilSizeInput.value) * INCH_TO_PX;
       const step = baseCell * subdivision;
       ctx.strokeStyle = '#000';
       ctx.fillStyle = '#000';
@@ -490,10 +497,10 @@
       ctx.strokeRect(RULER_MARGIN, RULER_MARGIN, pxW, pxH);
 
       const rows = Array.from(rowInputs.children).map(i => i.value.toUpperCase());
-      const cellSize = parseFloat(stencilSizeSelect.value) * INCH_TO_PX;
+      const cellSize = parseFloat(stencilSizeInput.value) * INCH_TO_PX;
       const totalH = rows.length * cellSize;
       const startY = (pxH - totalH) / 2 + RULER_MARGIN;
-      ctx.font = `${cellSize * 1}px Stardos Stencil, Arial, sans-serif`;
+      ctx.font = `${cellSize * 1}px "Stardos Stencil", Arial, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillStyle = '#000';
@@ -515,20 +522,32 @@
     presetSize.addEventListener('change', () => {
       const sel = presetSize.value;
       if (presets[sel]) {
-        canvasWidthFt.value = presets[sel].w;
-        canvasWidthIn.value = 0;
-        canvasHeightFt.value = presets[sel].h;
-        canvasHeightIn.value = 0;
+        const wFeet = Math.floor(presets[sel].w);
+        const wInches = Math.round((presets[sel].w - wFeet) * 12);
+        const hFeet = Math.floor(presets[sel].h);
+        const hInches = Math.round((presets[sel].h - hFeet) * 12);
+
+        canvasWidthFt.value = wFeet;
+        canvasWidthIn.value = wInches;
+        canvasHeightFt.value = hFeet;
+        canvasHeightIn.value = hInches;
       }
       drawGrid();
     });
 
-    [canvasWidthFt, canvasWidthIn, canvasHeightFt, canvasHeightIn,
-      stencilSizeSelect, showGridCheckbox, gridSubdivisionSelect]
-      .forEach(el => {
-        el.addEventListener('input', drawGrid);
-        el.addEventListener('change', drawGrid);
-      });
+    [
+      canvasWidthFt,
+      canvasWidthIn,
+      canvasHeightFt,
+      canvasHeightIn,
+      stencilSizeInput,
+      stencilSlider,
+      showGridCheckbox,
+      gridSubdivisionSelect
+    ].forEach(el => {
+      el.addEventListener('input', drawGrid);
+      el.addEventListener('change', drawGrid);
+    });
 
     window.addEventListener('load', drawGrid);
 
@@ -550,7 +569,7 @@
     });
 
     function getCleanStencilCanvas() {
-      const cellSize = parseFloat(stencilSizeSelect.value) * INCH_TO_PX;
+      const cellSize = parseFloat(stencilSizeInput.value) * INCH_TO_PX;
 
       // Get full canvas size in inches
       const { width: clothWidthIn, height: clothHeightIn } = getCanvasDimensionsInInches();
@@ -593,7 +612,7 @@
       // Text settings
       ctx.fillStyle = 'black';
       ctx.strokeStyle = 'black';
-      ctx.font = `${cellSize * 1}px Stardos Stencil, Arial, sans-serif`;
+      ctx.font = `${cellSize * 1}px "Stardos Stencil", Arial, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
@@ -636,7 +655,7 @@
         const stencilHpx = (stencilHIn / 12) * pixelsPerFoot;
 
         const centerX = (bgW - stencilWpx) / 2;
-        const topY = 480 - stencilHpx;
+        const topY = bgH * 0.45 - stencilHpx / 2;
 
         // Prepare overlay container
         const dropClothOverlay = document.getElementById('dropClothOverlay');
