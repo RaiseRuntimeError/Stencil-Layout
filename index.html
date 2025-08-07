@@ -167,15 +167,13 @@
       pointer-events: none;
     }
 
-    #closeModal {
+    #closeModal,
+    #closeAboutModal {
       position: absolute;
       top: 10px;
       right: 10px;
       z-index: 10000;
-      background: #fff;
-      border: none;
-      padding: 8px 12px;
-      cursor: pointer;
+
     }
 
     .section-row {
@@ -247,11 +245,19 @@
       width: 24px;
       height: 24px;
     }
+
+    @media (min-width: 769px) {
+      .sms-share {
+        display: none !important;
+      }
+    }
   </style>
 </head>
 
 <body>
-  <h2>Stencil Layout Helper</h2>
+  <h2 id="aboutModalTitle" class="m-0 text-error" style="font-family: 'Stardos Stencil', system-ui;">
+    Stencil Layout Helper
+  </h2>
 
   <div class="canvas-size-container">
     <div class="preset-group form-group">
@@ -313,7 +319,108 @@
     </div>
   </div>
 
+  <!-- About Modal -->
+  <div id="aboutModal"
+    style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; justify-content:center; align-items:center; overflow:auto;">
+    <div
+      style="background:white; color:black; padding:20px; max-width:800px; width:90%; border-radius:8px; position:relative;">
+
+      <button class="btn" id="closeAboutModal">Close</button>
+
+      <!-- Modal Content -->
+      <div class="container p-2" aria-labelledby="aboutModalTitle" aria-describedby="aboutModalBody">
+        <header class="mb-2">
+          <h3 id="aboutModalTitle" class="m-0 text-error" style="font-family: 'Stardos Stencil', system-ui;">
+            Stencil Layout Helper
+            Make Big, Readable Banners Fast
+          </h3>
+          <p id="aboutModalBody" class="text-dark">
+            Plan bold, legible lettering on cheap drop cloths, bed sheets, or whatever fabric you’ve got
+            for banner hangs, overpass holds, marches, rallies, and more. Remember, if it’s worth saying, it’s worth
+            saying loudly!
+          </p>
+        </header>
+
+        <section class="mb-2">
+          <h5 class="m-0"><i data-lucide="hand" aria-hidden="true"></i> Quick start</h5>
+          <ol class="mt-1">
+            <li><strong>Pick a cloth size</strong> (or set custom width/height).</li>
+            <li><strong>Choose stencil size</strong> (start with 12&quot; for overpasses; bigger is easier to read).
+            </li>
+            <li><strong>Type your lines</strong> into the rows. Keep it short, high-contrast, and punchy.</li>
+            <li><strong>Use the grid</strong> to center and align letters; adjust subdivision for finer spacing.</li>
+            <li><strong>Preview</strong> with “Preview on Overpass” and tweak until it pops.</li>
+          </ol>
+        </section>
+
+        <section class="mb-2">
+          <h5 class="m-0"><i data-lucide="megaphone" aria-hidden="true"></i> For two common tactics</h5>
+          <div class="columns mt-1">
+            <div class="column col-6">
+              <p class="m-0"><strong>Banner hang (drop):</strong> prioritize <em>huge</em> letters, minimal words, high
+                contrast.
+                Plan attachment points and consider wind. (Always follow site rules and safety best practices.)</p>
+            </div>
+            <div class="column col-6">
+              <p class="m-0"><strong>Banner holding (overpass/march):</strong> keep it ultra-readable at 60 mph:
+                3–6 words, all caps, bold strokes. Test the preview and go bigger if it looks cramped.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="mb-2">
+          <h5 class="m-0"><i data-lucide="ruler" aria-hidden="true"></i> Readability tips</h5>
+          <ul class="mt-1">
+            <li><strong>Fewer words &gt; more words.</strong> If you can’t read it in 3 seconds, shorten it.</li>
+            <li><strong>High contrast:</strong> black on natural canvas or white on dark cloth.</li>
+            <li><strong>Go big:</strong> 12–18&quot; letters for overpasses; 8–12&quot; works for sidewalks/streets.
+            </li>
+            <li><strong>All caps</strong> with generous letter spacing increases legibility at distance.</li>
+          </ul>
+        </section>
+
+        <section class="mb-2">
+          <h5 class="m-0"><i data-lucide="shopping-bag" aria-hidden="true"></i> Materials (cheap + durable)</h5>
+          <div class="columns mt-1">
+            <div class="column col-4">
+              <p class="m-0"><strong>Drop cloths</strong></p>
+              <a class="btn btn-link btn-sm"
+                href="https://www.harborfreight.com/painting/painting-supplies/drop-cloths-sheeting/canvas-drop-cloths.html"
+                target="_blank" rel="noopener">Harbor Freight Canvas Drop Cloths</a>
+            </div>
+            <div class="column col-4">
+              <p class="m-0"><strong>Spray paint</strong></p>
+              <a class="btn btn-link btn-sm"
+                href="https://www.lowes.com/pd/Project-Source-10-OZ-PROJECT-SOURCE-FLAT-BLACK-ECONOMY-SPRAY-PAINT/5013990349"
+                target="_blank" rel="noopener">Lowe’s Project Source Flat Black</a>
+              <a class="btn btn-link btn-sm"
+                href="https://www.homedepot.com/p/HDX-10-oz-All-Purpose-Flat-Black-Spray-Paint-AF79705UF/320161382"
+                target="_blank" rel="noopener">Home Depot HDX Flat Black</a>
+            </div>
+            <div class="column col-4">
+              <p class="m-0"><strong>Letter stencils</strong></p>
+              <a class="btn btn-link btn-sm"
+                href="https://www.ebay.com/sch/i.html?_nkw=12+inche+letter+stencils&_sacat=0&_from=R40&_trksid=p2332490.m570.l1313"
+                target="_blank" rel="noopener">12&quot; Letter Stencils on eBay</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="mb-2">
+          <h5 class="m-0"><i data-lucide="share-2" aria-hidden="true"></i> Share this tool</h5>
+          <p class="m-0">Got a crew who’d use this? Send them the link or hit the share buttons in the lower-right
+            corner.</p>
+        </section>
+
+      </div>
+
+    </div>
+  </div>
+
   <button class="btn btn-primary" id="previewButton">Preview on Overpass</button>
+  <button class="btn btn-secondary" id="aboutButton">
+    <i data-lucide="info"></i>
+  </button>
 
   <!-- Hidden preload image -->
   <img id="bgImagePreload" src="freeway-overpass.webp" style="display: none;" loading="eager" />
@@ -327,7 +434,7 @@
       <div id="dropClothOverlay">
         <canvas id="dropClothCanvas"></canvas>
       </div>
-      <button id="closeModal">Close</button>
+      <button class="btn" id="closeModal">Close</button>
     </div>
   </div>
 
@@ -376,12 +483,24 @@
   </div>
 
   <div class="social-float">
+    <!-- Copy Link -->
+    <a href="#" class="social-icon" aria-label="Copy link" id="copyLinkButton">
+      <i class="fa-solid fa-link"></i>
+    </a>
+
+    <!-- Text Message -->
+    <a href="sms:?&body=Check%20out%20this%20Stencil%20Layout%20tool%20https%3A%2F%2Fraiseruntimeerror.github.io%2FStencil-Layout"
+      class="social-icon sms-share" aria-label="Text message">
+      <i class="fa-solid fa-comment-sms"></i>
+    </a>
+
     <!-- Facebook -->
     <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fraiseruntimeerror.github.io%2FStencil-Layout&quote=Use%20this%20tool%20to%20take%20over%20freeway%20overpasses!%20%23DemocracyWins%20%23TrumpstienFiles"
       target="_blank" class="social-icon" aria-label="Facebook">
       <i class="fa-brands fa-facebook"></i>
     </a>
 
+    <!-- Tumblr -->
     <a href="https://www.tumblr.com/widgets/share/tool?canonicalUrl=https%3A%2F%2Fraiseruntimeerror.github.io%2FStencil-Layout&title=Stencil%20Layout%20Helper&caption=Use%20this%20tool%20to%20take%20over%20freeway%20overpasses!"
       target="_blank" class="social-icon" aria-label="Tumblr">
       <i class="fa-brands fa-tumblr"></i>
@@ -399,6 +518,7 @@
       <i class="fa-brands fa-bluesky"></i>
     </a>
 
+    <!-- Pinterest -->
     <a href="https://pinterest.com/pin/create/button/?url=https%3A%2F%2Fraiseruntimeerror.github.io%2FStencil-Layout&media=https%3A%2F%2Fraiseruntimeerror.github.io%2FStencil-Layout%2Ffreeway-overpass.webp&description=Use%20this%20tool%20to%20take%20over%20freeway%20overpasses!"
       target="_blank" class="social-icon" aria-label="Pinterest">
       <i class="fa-brands fa-pinterest"></i>
@@ -430,6 +550,23 @@
     const canvas = document.getElementById('stencilCanvas');
     const container = document.getElementById('canvasContainer');
     const ctx = canvas.getContext('2d');
+
+    const copyLinkButton = document.getElementById('copyLinkButton');
+    copyLinkButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      const link = "https://raiseruntimeerror.github.io/Stencil-Layout";
+      navigator.clipboard.writeText(link)
+        .then(() => {
+          // Optional: quick visual feedback
+          copyLinkButton.innerHTML = '<i class="fa-solid fa-check"></i>';
+          setTimeout(() => {
+            copyLinkButton.innerHTML = '<i class="fa-solid fa-link"></i>';
+          }, 1500);
+        })
+        .catch(err => {
+          console.error('Failed to copy: ', err);
+        });
+    });
 
     stencilSlider.addEventListener('input', () => {
       stencilSizeInput.value = stencilSlider.value;
@@ -618,7 +755,6 @@
           ctx.strokeStyle = '#000';
           ctx.strokeRect(x, y, cellSize, cellSize);
           ctx.fillText(text[c], x + cellSize / 2, y + cellSize / 2 + cellSize * 0.15);
-          //ctx.fillText(text[c], x + cellSize / 2, y + cellSize / 2);
         }
       });
     }
@@ -731,9 +867,8 @@
 
         for (let c = 0; c < text.length; c++) {
           const x = startX + c * cellSize;
-          ctx.strokeRect(x, y, cellSize, cellSize); // optional box
+          ctx.strokeRect(x, y, cellSize, cellSize);
           ctx.fillText(text[c], x + cellSize / 2, y + cellSize / 2 + cellSize * 0.15);
-          //ctx.fillText(text[c], x + cellSize / 2, y + cellSize / 2);
         }
       });
 
@@ -798,6 +933,58 @@
       modal.style.display = 'none';
       document.getElementById('dropClothOverlay').style.display = 'none';
     });
+
+    // About modal elements
+    const aboutModal = document.getElementById('aboutModal');
+    const aboutButton = document.getElementById('aboutButton');
+    const closeAboutModal = document.getElementById('closeAboutModal');
+
+    // Function to open modal
+    function openAboutModal() {
+      aboutModal.style.display = 'flex';
+    }
+
+    // Function to close modal + remember dismissal
+    function closeAbout() {
+      aboutModal.style.display = 'none';
+      localStorage.setItem('aboutModalDismissed', 'true');
+    }
+
+    // Event listeners
+    aboutButton.addEventListener('click', openAboutModal);
+    closeAboutModal.addEventListener('click', closeAbout);
+
+    // Open on first visit only
+    window.addEventListener('load', () => {
+      if (!localStorage.getItem('aboutModalDismissed')) {
+        openAboutModal();
+      }
+    });
+
+    // --- Preview modal (id="modal") ---
+    function closePreview() {
+      modal.style.display = 'none';
+      document.getElementById('dropClothOverlay').style.display = 'none';
+    }
+    closeModal.addEventListener('click', closePreview);
+
+    // Close when clicking outside the inner content
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closePreview();
+    });
+
+    // --- About modal (id="aboutModal") ---
+    function closeAbout() {
+      aboutModal.style.display = 'none';
+      localStorage.setItem('aboutModalDismissed', 'true');
+    }
+    closeAboutModal.addEventListener('click', closeAbout);
+
+    // Close when clicking outside the inner content
+    aboutModal.addEventListener('click', (e) => {
+      if (e.target === aboutModal) closeAbout();
+    });
+
     lucide.createIcons();
   </script>
 
