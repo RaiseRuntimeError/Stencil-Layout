@@ -45,6 +45,6 @@ This tool runs entirely in your browser — no installs, no accounts — and is 
 Clone the repository and open the `index.html` file in your browser:
 
 ```bash
-git clone https://github.com/<your-username>/Stencil-Layout.git
+git clone https://github.com/RaiseRuntimeError/Stencil-Layout.git
 cd Stencil-Layout
 open index.html  # or double-click it
