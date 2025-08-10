@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://raiseruntimeerror.github.io/Stencil-Layout/sitemap.xml
