@@ -2,47 +2,83 @@
 <html lang="en">
 
 <head>
-  <!-- Page metadata -->
+  <!-- Character encoding & responsive layout -->
   <meta charset="UTF-8" />
-  <title>Stencil Layout Helper – Free Online Banner & Protest Sign Planning Tool</title>
-  <meta name="description" content="Plan large, readable banners and protest signs online with the Stencil Layout Helper. Choose drop cloth sizes, adjust letter stencils, and preview your design before painting. Free and no signup required.">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Spectre.css framework -->
+  <!-- Primary SEO -->
+  <title>Stencil Layout Helper – Free Banner & Sign Tool</title>
+  <meta name="description" content="Plan big, readable banners and protest signs online. Choose drop-cloth sizes, set stencil letters, align with a grid, and preview on an overpass. Free, no signup." />
+  <link rel="canonical" href="https://raiseruntimeerror.github.io/Stencil-Layout/" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+
+  <!-- Favicons (add these files to your repo root if you have them) -->
+  <link rel="icon" href="/Stencil-Layout/favicon.svg" type="image/svg+xml" />
+  <link rel="alternate icon" href="/Stencil-Layout/favicon.png" type="image/png" />
+  <meta name="theme-color" content="#111111" />
+
+  <!-- Preconnects for faster third-party fetches -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+  <link rel="preconnect" href="https://unpkg.com" />
+
+  <!-- CSS frameworks -->
   <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
 
-  <!-- Preload important images for faster rendering -->
+  <!-- Fonts: Stardos Stencil -->
+  <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+        integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+
+  <!-- Critical image preloads -->
+  <link rel="preload" as="image" href="stencil-layout-preview.webp" />
   <link rel="preload" as="image" href="freeway-overpass.webp" />
   <link rel="preload" as="image" href="seamless-canvas-fabric-texture.webp" />
 
-  <!-- Google Fonts: Stardos Stencil -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil&display=swap" rel="stylesheet">
-
-  <!-- Font Awesome (icons) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
-    integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-  <!-- Lucide icon set -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <!-- Open Graph (for link previews on Facebook, LinkedIn, etc.) -->
-  <meta property="og:title" content="Stencil Layout Helper" />
-  <meta property="og:description" content="Plan your stencil layout with this helpful tool." />
+  <!-- Open Graph -->
+  <meta property="og:title" content="Stencil Layout Helper – Free Banner & Sign Tool" />
+  <meta property="og:description" content="Design large, high-contrast banner layouts with adjustable stencil sizes and grid alignment. Preview on an overpass before you paint." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://raiseruntimeerror.github.io/Stencil-Layout/" />
   <meta property="og:image" content="https://raiseruntimeerror.github.io/Stencil-Layout/stencil-layout-preview.webp" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:url" content="https://raiseruntimeerror.github.io/Stencil-Layout" />
-  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Stencil Layout Helper" />
 
-  <!-- Twitter Card metadata -->
+  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Stencil Layout Helper" />
-  <meta name="twitter:description" content="Plan your stencil layout with this helpful tool." />
+  <meta name="twitter:title" content="Stencil Layout Helper – Free Banner & Sign Tool" />
+  <meta name="twitter:description" content="Plan readable banners and protest signs online. Set sizes, align with a grid, and preview. Free and in-browser." />
   <meta name="twitter:image" content="https://raiseruntimeerror.github.io/Stencil-Layout/stencil-layout-preview.webp" />
-  <meta name="twitter:image:alt" content="Freeway overpass with stencil layout background." />
+  <meta name="twitter:image:alt" content="Stencil layout tool showing grid and large letter blocks on a canvas." />
 
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Stencil Layout Helper",
+    "applicationCategory": "DesignApplication",
+    "operatingSystem": "Web",
+    "isAccessibleForFree": true,
+    "url": "https://raiseruntimeerror.github.io/Stencil-Layout/",
+    "image": "https://raiseruntimeerror.github.io/Stencil-Layout/stencil-layout-preview.webp",
+    "description": "Free, in-browser tool for planning large stencil lettering on drop cloths and banners with grid alignment and overpass preview.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+
+  <!-- Privacy-friendly analytics -->
   <script defer data-domain="raiseruntimeerror.github.io" src="https://plausible.io/js/script.js"></script>
 
   <style>
