@@ -8,7 +8,8 @@
 
   <!-- Primary SEO -->
   <title>Stencil Layout Helper – Free Banner & Sign Tool</title>
-  <meta name="description" content="Plan big, readable banners and protest signs online. Choose drop-cloth sizes, set stencil letters, align with a grid, and preview on an overpass. Free, no signup." />
+  <meta name="description"
+    content="Plan big, readable banners and protest signs online. Choose drop-cloth sizes, set stencil letters, align with a grid, and preview on an overpass. Free, no signup." />
   <link rel="canonical" href="https://raiseruntimeerror.github.io/Stencil-Layout/" />
   <meta name="robots" content="index,follow,max-image-preview:large" />
 
@@ -34,10 +35,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil&display=swap" rel="stylesheet">
 
   <!-- Icons -->
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
-        integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+    integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <!-- Critical image preloads -->
@@ -47,7 +47,8 @@
 
   <!-- Open Graph -->
   <meta property="og:title" content="Stencil Layout Helper – Free Banner & Sign Tool" />
-  <meta property="og:description" content="Design large, high-contrast banner layouts with adjustable stencil sizes and grid alignment. Preview on an overpass before you paint." />
+  <meta property="og:description"
+    content="Design large, high-contrast banner layouts with adjustable stencil sizes and grid alignment. Preview on an overpass before you paint." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://raiseruntimeerror.github.io/Stencil-Layout/" />
   <meta property="og:image" content="https://raiseruntimeerror.github.io/Stencil-Layout/stencil-layout-preview.webp" />
@@ -58,7 +59,8 @@
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Stencil Layout Helper – Free Banner & Sign Tool" />
-  <meta name="twitter:description" content="Plan readable banners and protest signs online. Set sizes, align with a grid, and preview. Free and in-browser." />
+  <meta name="twitter:description"
+    content="Plan readable banners and protest signs online. Set sizes, align with a grid, and preview. Free and in-browser." />
   <meta name="twitter:image" content="https://raiseruntimeerror.github.io/Stencil-Layout/stencil-layout-preview.webp" />
   <meta name="twitter:image:alt" content="Stencil layout tool showing grid and large letter blocks on a canvas." />
 
@@ -303,9 +305,11 @@
   </h1>
 
   <div class="canvas-size-container">
+
+    <!-- Preset size dropdown -->
     <div class="preset-group form-group">
       <label for="presetSize">Preset Canvas Size:</label>
-      <select class="form-select" id="presetSize">
+      <select class="form-select" id="presetSize" title="Choose a standard banner or cloth size">
         <option value="custom">— Custom —</option>
         <option value="twin">3′3″ × 6′3″ — Twin Sheet</option>
         <option value="4x12">4 × 12 ft — $8.99</option>
@@ -314,43 +318,60 @@
         <option value="9x12">9 × 12 ft — $14.99</option>
         <option value="12x15">12 × 15 ft — $29.99</option>
       </select>
+      <button class="btn btn-outline btn-error" id="clearSettingsButton" style="margin-top: 8px;">
+        Clear Settings
+      </button>
     </div>
+
+    <!-- Canvas dimensions -->
     <div class="dimensions-group">
       <label>Canvas Width:</label>
       <div class="dimension-group form-group">
         <input class="form-input" type="number" id="canvasWidthFt" value="6" step="1" pattern="[0-9]*"
-          inputmode="numeric"> ft
+          inputmode="numeric" title="Width in feet"> ft
         <input class="form-input" type="number" id="canvasWidthIn" value="0" step="1" pattern="[0-9]*"
-          inputmode="numeric"> in
+          inputmode="numeric" title="Additional width in inches"> in
       </div>
+
       <label>Canvas Height:</label>
       <div class="dimension-group form-group">
         <input class="form-input" type="number" id="canvasHeightFt" value="3" step="1" pattern="[0-9]*"
-          inputmode="numeric"> ft
+          inputmode="numeric" title="Height in feet"> ft
         <input class="form-input" type="number" id="canvasHeightIn" value="0" step="1" pattern="[0-9]*"
-          inputmode="numeric"> in
+          inputmode="numeric" title="Additional height in inches"> in
       </div>
     </div>
+
+    <!-- Options -->
     <div class="options-group">
+
+      <!-- Stencil size -->
       <div class="form-group option-item">
         <label for="stencilSize">Stencil Size:</label>
-        <input type="range" id="stencilSlider" min="4" max="24" step="0.5" value="12" style="width: 150px;">
-        <input class="form-input" type="number" id="stencilSize" value="12" step="0.5" min="1" style="width: 70px;"> in
+        <input type="range" id="stencilSlider" min="4" max="24" step="0.5" value="12" style="width: 150px;"
+          title="Adjust stencil letter height">
+        <input class="form-input" type="number" id="stencilSize" value="12" step="0.5" min="1" style="width: 70px;"
+          title="Stencil letter height in inches"> in
       </div>
+
+      <!-- Grid toggle -->
       <div class="option-item form-group">
-        <label class="form-switch">
+        <label class="form-switch" title="Toggle margin grid lines on the canvas">
           <input type="checkbox" id="showGrid" checked>
           <i class="form-icon"></i> Show margin grid
         </label>
       </div>
+
+      <!-- Grid subdivision -->
       <div class="option-item form-group">
         <label for="gridSubdivision">Grid Subdivision:</label>
-        <select class="form-select" id="gridSubdivision">
+        <select class="form-select" id="gridSubdivision" title="Choose finer divisions for the grid">
           <option value="1">1× cell</option>
           <option value="0.5" selected>½× cell</option>
           <option value="0.25">¼× cell</option>
         </select>
       </div>
+
     </div>
   </div>
 
@@ -460,8 +481,13 @@
     </div>
   </div>
 
-  <button class="btn btn-primary" id="previewButton">Preview on Overpass</button>
-  <button class="btn btn-secondary" id="aboutButton">
+  <button class="btn btn-primary" id="previewButton" title="Preview your banner on an overpass background">Preview on
+    Overpass</button>
+  <button class="btn btn-success" id="shareTemplateButton"
+    title="Copy a shareable link with all settings and text rows">
+    Share this template
+  </button>
+  <button class="btn btn-secondary" id="aboutButton" title="About this tool and how to use it">
     <i data-lucide="info"></i>
   </button>
 
@@ -527,7 +553,7 @@
 
   <div class="social-float">
     <!-- Copy Link -->
-    <a href="#" class="social-icon" aria-label="Copy link" id="copyLinkButton">
+    <a href="#" class="social-icon" aria-label="Copy link" id="copyLinkButton" title="Copy a plain link to this tool">
       <i class="fa-solid fa-link"></i>
     </a>
 
@@ -589,6 +615,133 @@
     const ctx = canvas.getContext('2d');
 
     const copyLinkButton = document.getElementById('copyLinkButton');
+    const shareTemplateButton = document.getElementById('shareTemplateButton');
+
+    document.getElementById('clearSettingsButton').addEventListener('click', () => {
+      presetSize.value = 'custom';
+      canvasWidthFt.value = 6;
+      canvasWidthIn.value = 0;
+      canvasHeightFt.value = 3;
+      canvasHeightIn.value = 0;
+      stencilSlider.value = 12;
+      stencilSizeInput.value = 12;
+      showGridCheckbox.checked = true;
+      gridSubdivisionSelect.value = '0.5';
+
+      // Clear text rows
+      Array.from(rowInputs.children).forEach(input => input.value = '');
+
+      // Update everything
+      drawGrid();
+      scheduleURLUpdate();
+    });
+
+    // --- Shareable URL state ---------------------------------------
+    const STATE_VERSION = 1;
+
+    function readRowsFromUI() {
+      return Array.from(rowInputs.children).map(i => (i.value || '').toUpperCase());
+    }
+
+    function getStateFromUI() {
+      return {
+        v: STATE_VERSION,
+        p: presetSize.value !== 'custom' ? presetSize.value : undefined,
+        wft: +canvasWidthFt.value || 0,
+        win: +canvasWidthIn.value || 0,
+        hft: +canvasHeightFt.value || 0,
+        hin: +canvasHeightIn.value || 0,
+        ss: +stencilSizeInput.value || 12,
+        grid: showGridCheckbox.checked ? 1 : 0,
+        sub: +gridSubdivisionSelect.value || 1,
+        rows: readRowsFromUI(),
+      };
+    }
+
+    function applyStateToUI(s) {
+      if (s.p) presetSize.value = s.p; else presetSize.value = 'custom';
+      if (s.wft != null) canvasWidthFt.value = s.wft;
+      if (s.win != null) canvasWidthIn.value = s.win;
+      if (s.hft != null) canvasHeightFt.value = s.hft;
+      if (s.hin != null) canvasHeightIn.value = s.hin;
+      if (s.ss != null) { stencilSizeInput.value = s.ss; stencilSlider.value = s.ss; }
+      if (s.grid != null) showGridCheckbox.checked = !!Number(s.grid);
+      if (s.sub != null) gridSubdivisionSelect.value = String(s.sub);
+
+      // make sure we have the right number of row inputs first
+      updateRows();
+      if (Array.isArray(s.rows)) {
+        Array.from(rowInputs.children).forEach((input, i) => {
+          input.value = (s.rows[i] || '').slice(0, input.maxLength);
+        });
+      }
+      drawGrid();
+    }
+
+    function decodeStateFromURL() {
+      const q = new URLSearchParams(location.search);
+      if (!q.has('v')) return null;
+      return {
+        v: +q.get('v') || 1,
+        p: q.get('p') || undefined,
+        wft: +q.get('wft') || 0,
+        win: +q.get('win') || 0,
+        hft: +q.get('hft') || 0,
+        hin: +q.get('hin') || 0,
+        ss: +q.get('ss') || 12,
+        grid: +q.get('grid') || 0,
+        sub: +q.get('sub') || 1,
+        rows: (q.get('rows') || '').toLowerCase().split('\n').filter(Boolean),
+      };
+    }
+
+    function encodeStateToURL(s, { replace = true } = {}) {
+      const q = new URLSearchParams();
+      q.set('v', s.v);
+      if (s.p) q.set('p', s.p);
+      q.set('wft', s.wft); q.set('win', s.win);
+      q.set('hft', s.hft); q.set('hin', s.hin);
+      q.set('ss', s.ss);
+      q.set('grid', s.grid);
+      q.set('sub', s.sub);
+      if (s.rows?.length) q.set('rows', s.rows.join('\n'));
+
+      const url = `${location.pathname}?${q.toString()}`;
+      if (replace) history.replaceState(null, '', url);
+      else history.pushState(null, '', url);
+      return url;
+    }
+
+    let urlUpdateTimer = null;
+    function scheduleURLUpdate() {
+      clearTimeout(urlUpdateTimer);
+      urlUpdateTimer = setTimeout(() => {
+        encodeStateToURL(getStateFromUI(), { replace: true });
+      }, 150);
+    }
+
+    // Hook into all the existing inputs (you already add drawGrid)
+    [presetSize, canvasWidthFt, canvasWidthIn, canvasHeightFt, canvasHeightIn,
+      stencilSizeInput, stencilSlider, showGridCheckbox, gridSubdivisionSelect
+    ].forEach(el => {
+      el.addEventListener('input', scheduleURLUpdate);
+      el.addEventListener('change', scheduleURLUpdate);
+    });
+    // Bubble from child row <input>s
+    rowInputs.addEventListener('input', scheduleURLUpdate);
+
+    // On load: if URL has state, apply it; otherwise write initial state so copy works
+    window.addEventListener('load', () => {
+      const s = decodeStateFromURL();
+      if (s) {
+        // optional: suppress About modal for share links
+        localStorage.setItem('aboutModalDismissed', 'true');
+        applyStateToUI(s);
+      } else {
+        scheduleURLUpdate();
+      }
+    });
+
     copyLinkButton.addEventListener('click', (e) => {
       e.preventDefault();
       const link = "https://raiseruntimeerror.github.io/Stencil-Layout";
@@ -603,6 +756,22 @@
         .catch(err => {
           console.error('Failed to copy: ', err);
         });
+    });
+
+    shareTemplateButton.addEventListener('click', async (e) => {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+
+      const statefulPath = encodeStateToURL(getStateFromUI(), { replace: true });
+      const fullURL = location.origin + statefulPath;
+      try {
+        await navigator.clipboard.writeText(fullURL);
+        shareTemplateButton.textContent = 'Template Copied!';
+        setTimeout(() => (shareTemplateButton.textContent = 'Share This Template'), 1500);
+      } catch {
+        // Fallback if clipboard permission is blocked
+        prompt('Copy this link:', url);
+      }
     });
 
     function isMobileDevice() {
